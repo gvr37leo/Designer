@@ -1,0 +1,1 @@
+watchify client/main.ts --debug -p tsify -o client/bundle.js
