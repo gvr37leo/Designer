@@ -8,14 +8,14 @@ var url = 'mongodb://localhost:27017/company';
 var app = express();
 app.use(bodyParser.json());//for json encoded http body's
 app.use(bodyParser.urlencoded({ extended: false }));//for route parameters
-app.use(express.static('./client'));
+app.use(express.static('../../client'));
 
 var port = 8000;
-var exampledefinition = JSON.parse(fs.readFileSync('./public/definition.json','utf8'));
+// var exampledefinition = JSON.parse(fs.readFileSync('./public/definition.json','utf8'));
 
 
 mongoClient.connect(url,function(err,db){
-    if(err)console.log('error')
+    if(err)console.log('error connecting to mongodb')
     else{
         console.log('connected to mongo');
 
