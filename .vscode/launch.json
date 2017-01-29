@@ -8,8 +8,9 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}\\index.js",
-            "cwd": "${workspaceRoot}"
+            "program": "${workspaceRoot}/server/src/server.ts",
+            "cwd": "${workspaceRoot}",
+            "sourceMaps": true
         },
         {
             "type": "node",

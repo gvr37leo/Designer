@@ -1,33 +1,35 @@
-var router = new Router();
+var definition
 
 class Router extends Backbone.Router{
+    routes = {
+        "":this.default,
+        ":object":this.list,
+        ":object/new":this.create,
+        ":object/:id":this.detail,
+
+    };
+
      constructor(){
-         super()
-
-         this.routes = {
-            "":this.default,
-            ":object":this.list,
-            ":object/new":this.create,
-            ":object/:id":this.detail,
-
-         }
+         super();
+        (<any>this)._bindRoutes();
      }
 
      default(){
-
      }
 
      list(){
-
      }
 
      create(){
-
      }
 
      detail(){
-
      }
 }
 
-Backbone.history.start();
+var router = new Router();
+
+$.get('/definition.json',function(data){
+    definition = data;
+    Backbone.history.start();
+})
