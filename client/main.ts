@@ -2,6 +2,7 @@
 /// <reference path="../node_modules/@types/backbone/index.d.ts" />
 /// <reference path="../node_modules/@types/jquery/index.d.ts" />
 /// <reference path="../node_modules/@types/superagent/index.d.ts" />
+/// <reference path="tsdef.ts" />
 /// <reference path="./widgets/boolean/BooleanView.ts" />
 /// <reference path="./widgets/date/DateView.ts" />
 /// <reference path="./widgets/dropdown/DropDownView.ts" />
@@ -9,10 +10,17 @@
 /// <reference path="./widgets/object/ObjectView.ts" />
 /// <reference path="./widgets/pointer/PointerView.ts" />
 /// <reference path="./widgets/text/TextView.ts" />
-declare var superagent;
+/// <reference path="detail/DetailView.ts" />
+/// <reference path="detail/DetailNewView.ts" />
+/// <reference path="list/ListView.ts" />
 
+declare var superagent;
 declare var templates:any;
 templates = {};
+
+var currentObjectName
+var currentObjectDefinition//------
+var currentId//ssss
 
 var definition;
 var app = document.querySelector('#app')
@@ -26,32 +34,48 @@ class Router extends Backbone.Router{
 
     };
 
-     constructor(){
-         super();
+    constructor(){
+        super();
         (<any>this)._bindRoutes();
-     }
+    }
 
-     default(){
-
-         superagent.get('/api/company/57a3418be3427a10b0dd611a').then((res) => {
+    default(){
+        currentObjectDefinition = definition[Object.keys(definition)[0]];
+        superagent.get('/api/company/57a3418be3427a10b0dd611a').then((res) => {
             var dateView = new DropDownView({},{})
             app.appendChild(dateView.el);
-         })
-         
-     }
+        })
+        
+    }
 
-     list(){
-     }
+    list(object){
+        currentObjectName = object;
+        currentObjectDefinition = definition[object];
+        var listView = new ListView();
+        app.innerHTML = '';
+        app.appendChild(listView.el)
+    }
 
-     create(){
-     }
+    create(object){
+        currentObjectName = object;
+        currentObjectDefinition = definition[object];
+        var detailNewView = new DetailNewView();
+        app.innerHTML = '';
+        app.appendChild(detailNewView.el);
+    }
 
-     detail(){
-     }
+    detail(object, id){
+        currentObjectName = object;
+        currentObjectDefinition = definition[object];
+        currentId = id;
+        var detailView = new DetailView();
+        app.innerHTML = '';
+        app.appendChild(detailView.el);
+    }
 }
 
 var router = new Router();
-var names = ['boolean', 'date', 'detail', 'dropdown', 'list', 'number', 'object', 'pointer', 'text', 'wrapper']
+var names = ['boolean', 'date', 'detail', 'dropdown', 'list', 'number', 'object', 'pointer', 'text', 'wrapper','addButton','detailButton','deleteButton']
 var calls = [];
 for(var _name of names){
     (function(_name){
@@ -60,9 +84,13 @@ for(var _name of names){
         }))
     })(_name)
 }
+
 Promise.all(calls).then((values) => {
     $.get('/definition.json',function(data){
         definition = data;
+        for(var key in definition){
+            $('#navItemContainer').append(jade.compile("a(href='/##{key}').navbar-text #{key}")({key:key}))
+        }
         Backbone.history.start();
     })
 })

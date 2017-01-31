@@ -20,16 +20,25 @@ class DropDownView extends Backbone.View<Backbone.Model>{
 
     render(){
         var that = this;
-        var html = jade.compile(templates.dropdown)({data:this.data, attributename:this.attribute})
+        var html = jade.compile(templates.dropdown)({data:this.data, attributename:this.attribute.name})
         this.el.innerHTML = html
-        this.$('#dropdown').typeahead({
-            source:['aap','banaan'],
-            minLength:0,
-            showHintOnFocus:"all",
-            afterSelect:function(selected){
-                that.data[that.attribute.name] = selected._id;
+        superagent.get('/api/' + this.attribute.objectType)
+        .then((res) => {
+            this.$('#dropdown').typeahead({
+                source:res.body,
+                minLength:0,
+                showHintOnFocus:"all",
+                afterSelect:function(selected){
+                    that.data[that.attribute.name] = selected._id;
+                }
+            });
+            if(that.data[that.attribute.name]){
+                $.get('/api/' + that.attribute.objectType + '/' + that.data[that.attribute.name], function(data){
+                    that.$('#dropdown').val(data.name);
+                })
             }
-        });
+        })
+        
         return this;
     }
 

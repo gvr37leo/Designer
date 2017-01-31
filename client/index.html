@@ -4,11 +4,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.45/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.1/css/bootstrap-slider.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
 
   </head>
   <body>
-      <div id='app'>
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header" id="navItemContainer">
 
+          </div>
+        </div>
+      </nav>
+      <div class="container-fluid">
+        <div id="app"></div>
       </div>
       
       <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/3.4.1/superagent.min.js"></script>      
@@ -21,7 +29,9 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.45/js/bootstrap-datetimepicker.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.1/bootstrap-slider.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/3.1.1/bootstrap3-typeahead.min.js"></script>
-
+      
+      <script src="/out/detail/DetailView.js"></script>
+      <script src="/out/list/ListView.js"></script>
       <script src="/out/widgets/boolean/booleanView.js"></script>
       <script src="/out/widgets/date/DateView.js"></script>
       <script src="/out/widgets/dropdown/DropDownView.js"></script>

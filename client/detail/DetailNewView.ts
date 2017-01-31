@@ -1,5 +1,5 @@
 /// <reference path="../main.ts" />
-class DetailView extends Backbone.View<Backbone.Model>{
+class DetailNewView extends Backbone.View<Backbone.Model>{
     data;
 
     constructor(){
