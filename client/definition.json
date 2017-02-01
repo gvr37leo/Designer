@@ -1,41 +1,61 @@
 {
-    "object":{
+    "elder":{
+        "highlight":0,
         "attributes":[
-        	{
-        		"name":"name",
-    			"type":"text",
-    			"array":false
-        	},{
-        		"name":"highlight",
-    			"type":"number",
-    			"array":false
-        	},{
-        		"name":"attributes",
-    			"type":"object",
-    			"objectType":"attribute",
-    			"array":true
-        	}
+            {
+                "name":"name",
+                "type":"text"
+            },{
+                "name":"birth",
+                "type":"date"
+            },{
+                "name":"favoriteVolunteers",
+                "type":"object",
+                "objectType":"volunteer",
+                "array":true
+            }
+        ],
+        "functions":[
+            {
+                "name":"test",
+                "code":"console.log(view)"
+            }
         ]
     },
-    "attribute":{
+    "volunteer":{
+        "highlight":0,
         "attributes":[
-    		{
-    			"name":"name",
-    			"type":"text",
-    			"array":false
-    		},{
-    			"name":"type",
-    			"type":"text",
-    			"array":false
-    		},{
-    			"name":"objectType",
-    			"type":"text",
-    			"array":false
-    		},{
-    			"name":"array",
-    			"type":"boolean",
-    			"array":false
-    		}
+            {
+                "name":"name",
+                "type":"text"
+            },{
+                "name":"available",
+                "type":"boolean",
+                "array":false
+            }
+        ]
+    },
+    "task":{
+        "highlight":0,
+        "attributes":[
+            {
+                "name":"name",
+                "type":"text"
+            },{
+                "name":"date",
+                "type":"date"
+            },{
+                "name":"volunteer",
+                "type":"object",
+                "objectType":"volunteer",
+                "array":false
+            },{
+                "name":"elder",
+                "type":"object",
+                "objectType":"elder",
+                "array":false
+            }
         ]
     }
+
 }

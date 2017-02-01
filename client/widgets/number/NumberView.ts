@@ -15,12 +15,17 @@ class NumberView extends Backbone.View<Backbone.Model>{
 
     render(){
         var that = this;
-        var html = jade.compile(templates.number)({data:this.data, attributename:this.attribute})
+        var html = jade.compile(templates.number)({data:this.data, attributename:this.attribute.name})
         this.el.innerHTML = html
-        var mySlider = this.$("#inputField").slider({
+        var mySlider = this.$("input").slider({
             min:0,
-            max:20,
+            max:20
         });
+        
+        mySlider.slider('setValue', this.data[this.attribute.name])
+        mySlider.on('change', (a)=>{
+            this.data[this.attribute.name] = mySlider.slider('getValue')
+        })
 
         return this;
     }
@@ -29,10 +34,5 @@ class NumberView extends Backbone.View<Backbone.Model>{
         return {
            
         }
-    }
-
-    save(){
-        this.data[this.attribute] = !this.data[this.attribute];
-        this.render();
     }
 };

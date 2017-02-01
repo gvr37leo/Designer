@@ -39,6 +39,15 @@ class ListView extends Backbone.View<Backbone.Model>{
             this.$('#headerSearchContainer').append(searchCell)
         }
         that.$('#headerAttributeContainer').append(jade.compile(templates.addButton)({key:currentObjectName}))
+
+        for(var i = 0; i < currentObjectDefinition.functions.length; i++){
+            var current = currentObjectDefinition.functions[i]
+            var func = Function("view", current.code);
+            var headerCell = $(jade.compile('th\n   button.btn.btn-default|#{name}')({name:current.name}));
+            headerCell.find('button').click((e) => {func(this)});
+            this.$('#headerFunctionsContainer').append(headerCell)
+        }
+
         this.renderList();
         
         return this;

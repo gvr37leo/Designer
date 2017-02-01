@@ -15,7 +15,7 @@ class BooleanView extends Backbone.View<Backbone.Model>{
 
     render(){
         var that = this;
-        var html = jade.compile(templates.boolean)({data:this.data, attributename:this.attribute})
+        var html = jade.compile(templates.boolean)({data:this.data, attributename:this.attribute.name})
         this.el.innerHTML = html
         return this;
     }
@@ -27,7 +27,7 @@ class BooleanView extends Backbone.View<Backbone.Model>{
     }
 
     save(){
-        this.data[this.attribute] = !this.data[this.attribute];
+        this.data[this.attribute.name] = !this.data[this.attribute.name];
         this.render();
     }
 };
