@@ -42,11 +42,11 @@ class Router extends Backbone.Router{
     }
 
     default(){
+        currentObjectName = Object.keys(definition)[0];
         currentObjectDefinition = definition[Object.keys(definition)[0]];
-        superagent.get('/api/company/57a3418be3427a10b0dd611a').then((res) => {
-            var dateView = new DropDownView({},{})
-            app.appendChild(dateView.el);
-        })
+        var listView = new ListView();
+        app.innerHTML = '';
+        app.appendChild(listView.el)
         
     }
 

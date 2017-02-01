@@ -13,21 +13,16 @@ class DetailNewView extends Backbone.View<Backbone.Model>{
 
         this.$el.html(jade.compile(templates.detail)({key:currentObjectName}));
 
-
         for(var i = 0; i < currentObjectDefinition.attributes.length; i++){
             var attribute:Attribute = currentObjectDefinition.attributes[i]
-
+            var attributeView
             if(!attribute.array){
-                var attributeView = widgetMap[attribute.type](this.data, attribute);
-                that.$('#attributeContainer').append(attributeView.el);
+                attributeView = widgetMap[attribute.type](this.data, attribute);
             }else{
-
+                attributeView = new ArrayView(this.data, attribute);
             }
+            that.$('#attributeContainer').append(attributeView.el);
         }
-
-
-
-
         return this;
     }
 
@@ -38,8 +33,7 @@ class DetailNewView extends Backbone.View<Backbone.Model>{
     }
 
     save(){
-        delete this.data._id
-        superagent.put("/api/" + currentObjectName + '/' + currentId)
+        superagent.post("/api/" + currentObjectName)
         .send(this.data)
         .then((res) => {
             router.navigate(currentObjectName, {trigger: true});

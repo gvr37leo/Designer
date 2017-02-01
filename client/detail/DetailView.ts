@@ -27,9 +27,6 @@ class DetailView extends Backbone.View<Backbone.Model>{
                 that.$('#attributeContainer').append(attributeView.el);
             }
         })
-
-
-
         return this;
     }
 
