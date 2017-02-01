@@ -4,29 +4,27 @@ class DetailNewView extends Backbone.View<Backbone.Model>{
 
     constructor(){
         super();
+        this.data = createEmptyObject(currentObjectDefinition);
         this.render();
     }
 
     render() {
         var that = this;
 
-        this.$el.html(jade.compile(templates.detail)({}));
+        this.$el.html(jade.compile(templates.detail)({key:currentObjectName}));
 
 
-        $.get("/api/" +  currentObjectName + '/' + currentId, (data) => {
-            this.data = data;
+        for(var i = 0; i < currentObjectDefinition.attributes.length; i++){
+            var attribute:Attribute = currentObjectDefinition.attributes[i]
 
-            for(var i = 0; i < currentObjectDefinition.attributes.length; i++){
-                var attribute:Attribute = currentObjectDefinition.attributes[i]
+            if(!attribute.array){
+                var attributeView = widgetMap[attribute.type](this.data, attribute);
+                that.$('#attributeContainer').append(attributeView.el);
+            }else{
 
-                if(!attribute.array){
-                    var attributeView = widgetMap[attribute.type](data, attribute);
-                    that.$('#attributeContainer').append(attributeView.el);
-                }else{
-
-                }
             }
-        })
+        }
+
 
 
 
@@ -41,34 +39,40 @@ class DetailNewView extends Backbone.View<Backbone.Model>{
 
     save(){
         delete this.data._id
-        superagent.put("/api/" + currentObjectDefinition.key + '/' + currentId)
+        superagent.put("/api/" + currentObjectName + '/' + currentId)
         .send(this.data)
         .then((res) => {
-            router.navigate(currentObjectDefinition.key, {trigger: true});
+            router.navigate(currentObjectName, {trigger: true});
         })
     }
 };
 
-var widgetMap = {
-    'boolean':(data, attribute) => {
-        return new BooleanView(data, attribute)
-    },
-    'date':(data, attribute) => {
-        return new DateView(data, attribute)
-    },
-    // 'dropdown':(data, attribute) => {
-    //     return new DropDownView(data, attribute)
-    // },
-    'number':(data, attribute) => {
-        return new NumberView(data, attribute)
-    },
-    'object':(data, attribute) => {
-        return new DropDownView(data, attribute)
-    },
-    'pointer':(data, attribute) => {
-        return new PointerView(data, attribute)
-    },
-    'text':(data, attribute) => {
-        return new TextView(data, attribute)
-    },
+function createEmptyObject(objectDescription){
+    var object = {};
+    for(var i = 0; i < objectDescription.attributes.length; i++){
+        var attribute = objectDescription.attributes[i];
+        if(attribute.array)object[attribute.name] = [];
+        else {
+            switch(attribute.type){
+                case 'text':
+                    object[attribute.name] = "";
+                    break;
+                case 'date':
+                    object[attribute.name] = "";
+                    break;
+                case 'object':
+                    object[attribute.name] = "";
+                    break;
+                case 'number':
+                    object[attribute.name] = 0;
+                    break;
+                case 'boolean':
+                    object[attribute.name] = false;
+                    break;
+                default:
+                    object[attribute.name] = "";
+            }
+        }
+    }
+    return object;
 }

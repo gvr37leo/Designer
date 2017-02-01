@@ -10,7 +10,7 @@ class DetailView extends Backbone.View<Backbone.Model>{
     render() {
         var that = this;
 
-        this.$el.html(jade.compile(templates.detail)({}));
+        this.$el.html(jade.compile(templates.detail)({key:currentObjectName}));
 
 
         $.get("/api/" +  currentObjectName + '/' + currentId, (data) => {
@@ -18,13 +18,13 @@ class DetailView extends Backbone.View<Backbone.Model>{
 
             for(var i = 0; i < currentObjectDefinition.attributes.length; i++){
                 var attribute:Attribute = currentObjectDefinition.attributes[i]
-
+                var attributeView
                 if(!attribute.array){
-                    var attributeView = widgetMap[attribute.type](data, attribute);
-                    that.$('#attributeContainer').append(attributeView.el);
+                    attributeView = widgetMap[attribute.type](data, attribute);
                 }else{
-
+                    attributeView = new ArrayView(data, attribute);
                 }
+                that.$('#attributeContainer').append(attributeView.el);
             }
         })
 
@@ -41,10 +41,10 @@ class DetailView extends Backbone.View<Backbone.Model>{
 
     save(){
         delete this.data._id
-        superagent.put("/api/" + currentObjectDefinition.key + '/' + currentId)
+        superagent.put("/api/" + currentObjectName + '/' + currentId)
         .send(this.data)
         .then((res) => {
-            router.navigate(currentObjectDefinition.key, {trigger: true});
+            router.navigate(currentObjectName, {trigger: true});
         })
     }
 };

@@ -38,7 +38,7 @@ class ListView extends Backbone.View<Backbone.Model>{
             })
             this.$('#headerSearchContainer').append(searchCell)
         }
-        that.$('#headerAttributeContainer').append(jade.compile(templates.addButton)(currentObjectDefinition))
+        that.$('#headerAttributeContainer').append(jade.compile(templates.addButton)({key:currentObjectName}))
         this.renderList();
         
         return this;

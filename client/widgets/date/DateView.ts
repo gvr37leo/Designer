@@ -18,13 +18,14 @@ class DateView extends Backbone.View<Backbone.Model>{
         this.el.innerHTML = html
         
         var elem = this.$('#dateField')
+        elem.val(this.data[this.attribute.name])
         var datetimepicker = elem.datetimepicker({
             format:"DD-MM-YYYY HH:mm"
         });
 
-        // elem.on("dp.change", function(e){
-        //     that.data[that.attribute.name] = e.date.format("DD-MM-YYYY HH:mm");
-        // });
+        elem.on("dp.change", function(e){
+            that.data[that.attribute.name] = e.date.format("DD-MM-YYYY HH:mm");
+        });
         return this;
     }
 };

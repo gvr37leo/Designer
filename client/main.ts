@@ -12,15 +12,17 @@
 /// <reference path="./widgets/text/TextView.ts" />
 /// <reference path="detail/DetailView.ts" />
 /// <reference path="detail/DetailNewView.ts" />
+/// <reference path="detail/ArrayView.ts" />
 /// <reference path="list/ListView.ts" />
+/// <reference path="widgets/WrapperView.ts" />
 
 declare var superagent;
 declare var templates:any;
 templates = {};
 
 var currentObjectName
-var currentObjectDefinition//------
-var currentId//ssss
+var currentObjectDefinition
+var currentId
 
 var definition;
 var app = document.querySelector('#app')
@@ -75,7 +77,7 @@ class Router extends Backbone.Router{
 }
 
 var router = new Router();
-var names = ['boolean', 'date', 'detail', 'dropdown', 'list', 'number', 'object', 'pointer', 'text', 'wrapper','addButton','detailButton','deleteButton']
+var names = ['detailArrayAdder','detailArrayWrapper','boolean', 'date', 'detail', 'dropdown', 'list', 'number', 'object', 'pointer', 'text', 'wrapper','addButton','detailButton','deleteButton']
 var calls = [];
 for(var _name of names){
     (function(_name){
