@@ -14,6 +14,11 @@
     			"type":"object",
     			"objectType":"attribute",
     			"array":true
+        	},{
+        		"name":"functions",
+    			"type":"object",
+    			"objectType":"function",
+    			"array":true
         	}
         ]
     },
@@ -37,5 +42,18 @@
     			"array":false
     		}
         ]
-    }
+    },
+	"function":{
+		"attributes":[
+    		{
+    			"name":"name",
+    			"type":"text",
+    			"array":false
+    		},{
+    			"name":"code",
+    			"type":"text",
+    			"array":false
+    		}
+        ]
+	}
 }

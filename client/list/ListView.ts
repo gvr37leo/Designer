@@ -15,7 +15,13 @@ class ListView extends Backbone.View<Backbone.Model>{
         this.sortAscending = true;
         this.sortAttribute = null;
 
-        that.render();
+
+        $.get("api/" + currentObjectName,(data) =>{
+            this.data = data;
+            this.filteredData = data;
+            that.render();
+        });
+        
         
     }
 
@@ -29,13 +35,33 @@ class ListView extends Backbone.View<Backbone.Model>{
             var attribute:Attribute = currentObjectDefinition.attributes[i];
 
             var headerCell = $(jade.compile('th\n   a.clickable #{name}')({name:attribute.name}));
-            this.$('#headerAttributeContainer').append(headerCell)
+            this.$('#headerAttributeContainer').append(headerCell);
+            ((attributeName) => {
+                headerCell.find('a').click((e) => {
+                    this.sortAscending = !this.sortAscending;
+                    this.filteredData.sort((a, b) => {
+                        if(a[attributeName] < b[attributeName])return negateIfInverted(-1);
+                        if(a[attributeName] == b[attributeName])return 0;
+                        if(a[attributeName] > b[attributeName])return negateIfInverted(1);
+                    })
+                    function negateIfInverted(a){
+                        if(!that.sortAscending)return a * -1;
+                        return a;
+                    }
+                    this.renderList();
+                })
+            })(attribute.name)
+            
             
 
             var searchCell = $(jade.compile('th\n   input.form-control')({}));
-            searchCell.find('input').on('input', (e)=>{
-                console.log('change')
-            })
+            ((attributeName) => {
+                searchCell.find('input').on('input', (e:any)=>{
+                    this.filter[attributeName] = e.currentTarget.value;
+                    this.applyFilter();
+                    this.renderList();
+                })
+            })(attribute.name)
             this.$('#headerSearchContainer').append(searchCell)
         }
         that.$('#headerAttributeContainer').append(jade.compile(templates.addButton)({key:currentObjectName}))
@@ -54,30 +80,25 @@ class ListView extends Backbone.View<Backbone.Model>{
     }
 
     renderList(){
-        $.get("api/" + currentObjectName,(data) =>{
-            this.data = data;
-            this.filteredData = data;
+        this.$('#listElementContainer').html('')
+        for(var object of this.filteredData){//rows
+            var row = $(jade.compile('tr')({}));
+            this.$('#listElementContainer').append(row)
+            for(var i = 0; i < currentObjectDefinition.attributes.length; i++){//cells
+                var attribute:Attribute = currentObjectDefinition.attributes[i];
+                
+                var cell = $(jade.compile('td\n  input.form-control(value="#{data}")')({data:object[attribute.name]}));
+                row.append(cell)
 
-            that.$('#listElementContainer').html('')
-            for(var object of this.data){//rows
-                var row = $(jade.compile('tr')({}));
-                this.$('#listElementContainer').append(row)
-                for(var i = 0; i < currentObjectDefinition.attributes.length; i++){//cells
-                    var attribute:Attribute = currentObjectDefinition.attributes[i];
-                    
-                    var cell = $(jade.compile('td\n  input.form-control(value="#{data}")')({data:object[attribute.name]}));
-                    row.append(cell)
-
-                }
-                row.append($(jade.compile(templates.detailButton)(_.extend({key:currentObjectName}, object))))
-                var deleteButton = $(jade.compile(templates.deleteButton)({}))
-                deleteButton.click((e) => {
-                    superagent.delete('/api/' + currentObjectName + '/' + object._id)
-                    .then()
-                })
-                row.append(deleteButton)
             }
-        })
+            row.append($(jade.compile(templates.detailButton)(_.extend({key:currentObjectName}, object))))
+            var deleteButton = $(jade.compile(templates.deleteButton)({}))
+            deleteButton.click((e) => {
+                superagent.delete('/api/' + currentObjectName + '/' + object._id)
+                .then()
+            })
+            row.append(deleteButton)
+        }
         var that = this;
         
 
